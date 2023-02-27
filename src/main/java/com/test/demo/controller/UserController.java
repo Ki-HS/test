@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -65,7 +64,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<HttpStatus> signUp(@RequestBody User user){
         String pw = user.getPw();
-        user.setPw(new BCryptPasswordEncoder().encode(pw));
+        //user.setPw(new BCryptPasswordEncoder().encode(pw));
         userDao.signUp(user);
         return ResponseEntity.ok().body(HttpStatus.OK);
     }
@@ -96,7 +95,8 @@ public class UserController {
     @PostMapping("/changePW")
     public ResponseEntity<HttpStatus> changePW(@RequestBody NewPwDto newPwDto){
         User user = userDao.findUser(newPwDto.getId());
-        user.setPw(new BCryptPasswordEncoder().encode(newPwDto.getPw()));
+        user.setPw(newPwDto.pw);
+        //user.setPw(new BCryptPasswordEncoder().encode(newPwDto.getPw()));
         userDao.updateUser(user);
         return ResponseEntity.ok().body(HttpStatus.OK);
     }
